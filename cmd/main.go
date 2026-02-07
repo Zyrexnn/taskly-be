@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"tasklybe/internal/db"
+	"tasklybe/internal/siswa"
 	"tasklybe/internal/task"
 	"tasklybe/internal/user"
 
@@ -36,7 +37,7 @@ func main() {
 	db.ConnectDB()
 
 	// Auto-migrate models
-	err := db.DB.AutoMigrate(&user.User{}, &task.Task{})
+	err := db.DB.AutoMigrate(&user.User{}, &task.Task{}, &siswa.Siswa{})
 	if err != nil {
 		log.Fatalf("Failed to migrate database: %v", err)
 	}
@@ -49,15 +50,22 @@ func main() {
 	// Initialize services
 	userService := user.NewService(db.DB)
 	taskService := task.NewService(db.DB)
+	siswaService := siswa.NewService(db.DB)
 
 	// Initialize handlers
 	userHandler := user.NewHandler(userService)
 	taskHandler := task.NewHandler(taskService)
+	siswaHandler := siswa.NewHandler(siswaService)
 
 	// Setup routing
 	api := app.Group("/api")
 	user.SetupUserRoutes(api, userHandler)
 	task.SetupTaskRoutes(api, taskHandler)
+	siswa.SetupSiswaRoutes(api, siswaHandler)
+
+
+
+	
 
 	// Start server
 	port := os.Getenv("APP_PORT")
