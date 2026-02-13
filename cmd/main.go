@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"os"
-	"tasklybe/internal/server"
+	"tasklybe/pkg/server"
 )
 
 func main() {

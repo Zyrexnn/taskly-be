@@ -2,7 +2,7 @@ package api
 
 import (
 	"net/http"
-	"tasklybe/internal/server"
+	"tasklybe/pkg/server"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/adaptor"
