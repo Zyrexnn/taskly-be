@@ -4,13 +4,13 @@ package user
 type RegisterRequestDTO struct {
 	Name     string `json:"name" validate:"required"`
 	Email    string `json:"email" validate:"required,email"`
-	Password string `json:"password" validate:"required,min=6"`
+	Password string `json:"password" validate:"required,min=3"`
 }
 
 // LoginRequestDTO defines the structure for the user login request body.
 type LoginRequestDTO struct {
-	Email    string `json:"email" validate:"required,email"`
-	Password string `json:"password" validate:"required"`
+	Identifier string `json:"identifier" validate:"required"`
+	Password   string `json:"password" validate:"required"`
 }
 
 // UserResponseDTO defines the structure for user data in responses (without password).
