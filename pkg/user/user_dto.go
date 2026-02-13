@@ -9,7 +9,8 @@ type RegisterRequestDTO struct {
 
 // LoginRequestDTO defines the structure for the user login request body.
 type LoginRequestDTO struct {
-	Identifier string `json:"identifier" validate:"required"`
+	Identifier string `json:"identifier"`
+	Email      string `json:"email"`
 	Password   string `json:"password" validate:"required"`
 }
 

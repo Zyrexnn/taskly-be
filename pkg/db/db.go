@@ -25,8 +25,13 @@ func ConnectDB() {
 		dbname = "postgres"
 	}
 
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable search_path=public client_encoding=UTF8",
-		host, user, password, dbname, port,
+	sslmode := os.Getenv("DB_SSLMODE")
+	if sslmode == "" {
+		sslmode = "disable"
+	}
+
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s search_path=public client_encoding=UTF8",
+		host, user, password, dbname, port, sslmode,
 	)
 
 	fmt.Printf("Connecting to database: %s on %s:%s\n", dbname, host, port)

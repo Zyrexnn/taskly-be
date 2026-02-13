@@ -61,8 +61,18 @@ func (s *service) Register(req RegisterRequestDTO) (*UserResponseDTO, error) {
 // Login authenticates a user and returns a JWT.
 func (s *service) Login(req LoginRequestDTO) (*LoginResponseDTO, error) {
 	var user User
+
+	identifier := req.Identifier
+	if identifier == "" {
+		identifier = req.Email
+	}
+
+	if identifier == "" {
+		return nil, errors.New("email or username is required")
+	}
+
 	// Search by email OR name
-	if err := s.db.Where("email = ? OR name = ?", req.Identifier, req.Identifier).First(&user).Error; err != nil {
+	if err := s.db.Where("email = ? OR name = ?", identifier, identifier).First(&user).Error; err != nil {
 		return nil, errors.New("invalid credentials")
 	}
 
