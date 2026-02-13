@@ -46,12 +46,3 @@ type SiswaResponseDTO struct {
 	CreatedAt    time.Time  `json:"created_at"`
 	UpdatedAt    time.Time  `json:"updated_at"`
 }
-
-// SiswaListResponseDTO defines the structure for list of siswa with pagination.
-type SiswaListResponseDTO struct {
-	Data       []SiswaResponseDTO `json:"data"`
-	Page       int                `json:"page"`
-	Limit      int                `json:"limit"`
-	Total      int64              `json:"total"`
-	TotalPages int                `json:"total_pages"`
-}

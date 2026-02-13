@@ -8,29 +8,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type CustomValidator struct {
-	validator *validator.Validate
-}
-
-func NewValidator() *CustomValidator {
-	return &CustomValidator{validator: validator.New()}
-}
-
-func (cv *CustomValidator) Validate(i interface{}) error {
-	if err := cv.validator.Struct(i); err != nil {
-		return err
-	}
-	return nil
-}
+var validate = validator.New()
 
 // BindAndValidate binds the request body to a struct and validates it.
 func BindAndValidate(c *fiber.Ctx, dto interface{}) (bool, []string) {
 	if err := c.BodyParser(dto); err != nil {
-		return false, []string{"Failed to parse request body"}
+		return false, []string{"Failed to parse request body: " + err.Error()}
 	}
 
-	validate := NewValidator()
-	if err := validate.Validate(dto); err != nil {
+	if err := validate.Struct(dto); err != nil {
 		return false, FormatValidationErrors(err)
 	}
 
@@ -59,9 +45,9 @@ func formatError(err validator.FieldError) string {
 		return fmt.Sprintf("%s must be at least %s characters long", field, err.Param())
 	case "email":
 		return fmt.Sprintf("%s must be a valid email address", field)
-	case "unique":
-		return fmt.Sprintf("%s already exists", field)
+	case "oneof":
+		return fmt.Sprintf("%s must be one of [%s]", field, err.Param())
 	default:
-		return fmt.Sprintf("invalid %s", field)
+		return fmt.Sprintf("%s is invalid: %s", field, err.Tag())
 	}
 }

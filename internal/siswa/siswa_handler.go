@@ -50,7 +50,7 @@ func (h *Handler) Create(c *fiber.Ctx) error {
 // @Param        page    query     int     false  "Page number"        default(1)
 // @Param        limit   query     int     false  "Items per page"     default(10)
 // @Param        search  query     string  false  "Search by nama or NIS"
-// @Success      200     {object}  dto.ResponseWrapper[SiswaListResponseDTO]
+// @Success      200     {object}  dto.ResponseWrapper[dto.PaginatedResponse[SiswaResponseDTO]]
 // @Failure      500     {object}  dto.ResponseWrapper[any]
 // @Router       /siswa [get]
 func (h *Handler) GetAll(c *fiber.Ctx) error {

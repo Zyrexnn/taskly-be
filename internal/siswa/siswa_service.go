@@ -2,7 +2,7 @@ package siswa
 
 import (
 	"errors"
-	"math"
+	"tasklybe/internal/dto"
 	"time"
 
 	"gorm.io/gorm"
@@ -10,7 +10,7 @@ import (
 
 type Service interface {
 	Create(req CreateSiswaRequestDTO) (*SiswaResponseDTO, error)
-	GetAll(page, limit int, search string) (*SiswaListResponseDTO, error)
+	GetAll(page, limit int, search string) (*dto.PaginatedResponse[SiswaResponseDTO], error)
 	GetByID(id uint) (*SiswaResponseDTO, error)
 	Update(id uint, req UpdateSiswaRequestDTO) (*SiswaResponseDTO, error)
 	Delete(id uint) error
@@ -71,7 +71,7 @@ func (s *service) Create(req CreateSiswaRequestDTO) (*SiswaResponseDTO, error) {
 }
 
 // GetAll retrieves all siswa with pagination and search.
-func (s *service) GetAll(page, limit int, search string) (*SiswaListResponseDTO, error) {
+func (s *service) GetAll(page, limit int, search string) (*dto.PaginatedResponse[SiswaResponseDTO], error) {
 	var siswaList []Siswa
 	var total int64
 
@@ -103,20 +103,13 @@ func (s *service) GetAll(page, limit int, search string) (*SiswaListResponseDTO,
 	}
 
 	// Convert to response DTOs
-	var responseList []SiswaResponseDTO
+	responseList := make([]SiswaResponseDTO, 0, len(siswaList))
 	for _, siswa := range siswaList {
 		responseList = append(responseList, *s.toResponseDTO(&siswa))
 	}
 
-	totalPages := int(math.Ceil(float64(total) / float64(limit)))
-
-	return &SiswaListResponseDTO{
-		Data:       responseList,
-		Page:       page,
-		Limit:      limit,
-		Total:      total,
-		TotalPages: totalPages,
-	}, nil
+	result := dto.NewPaginatedResponse(responseList, total, page, limit)
+	return &result, nil
 }
 
 // GetByID retrieves a siswa by ID.

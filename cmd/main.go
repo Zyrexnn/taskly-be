@@ -63,10 +63,6 @@ func main() {
 	task.SetupTaskRoutes(api, taskHandler)
 	siswa.SetupSiswaRoutes(api, siswaHandler)
 
-
-
-	
-
 	// Start server
 	port := os.Getenv("APP_PORT")
 	if port == "" {

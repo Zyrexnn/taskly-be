@@ -134,8 +134,8 @@ func (h *Handler) UpdateTask(c *fiber.Ctx) error {
 	}
 
 	var req UpdateTaskDTO
-	if err := c.BodyParser(&req); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(dto.NewErrorResponse("Failed to parse request body", err.Error()))
+	if ok, errors := validation.BindAndValidate(c, &req); !ok {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.NewErrorResponse("Validation failed", errors))
 	}
 
 	task, err := h.service.UpdateTask(userID, uint(taskID), req)
