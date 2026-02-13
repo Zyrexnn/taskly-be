@@ -2,6 +2,7 @@ package server
 
 import (
 	"log"
+	"os"
 	"tasklybe/pkg/db"
 	"tasklybe/pkg/siswa"
 	"tasklybe/pkg/task"
@@ -44,8 +45,14 @@ func SetupApp() *fiber.App {
 	// Initialize Fiber app
 	app := fiber.New()
 	app.Use(logger.New())
+
+	allowOrigins := os.Getenv("ALLOW_ORIGINS")
+	if allowOrigins == "" {
+		allowOrigins = "*"
+	}
+
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "*",
+		AllowOrigins:     allowOrigins,
 		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
 		AllowMethods:     "GET, POST, PUT, DELETE, OPTIONS",
 		AllowCredentials: true,
