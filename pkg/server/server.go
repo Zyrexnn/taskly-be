@@ -51,12 +51,19 @@ func SetupApp() *fiber.App {
 		allowOrigins = "*"
 	}
 
-	app.Use(cors.New(cors.Config{
-		AllowOrigins:     allowOrigins,
+	corsConfig := cors.Config{
 		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
 		AllowMethods:     "GET, POST, PUT, DELETE, OPTIONS",
+		AllowOrigins:     allowOrigins,
 		AllowCredentials: true,
-	}))
+	}
+
+	// Fiber v2.52+ panics if AllowOrigins is "*" AND AllowCredentials is true
+	if allowOrigins == "*" {
+		corsConfig.AllowCredentials = false
+	}
+
+	app.Use(cors.New(corsConfig))
 
 	// Initialize services
 	userService := user.NewService(db.DB)
